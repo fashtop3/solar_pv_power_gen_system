@@ -1,0 +1,18 @@
+<RCC>
+    <qresource prefix="/resources">
+        <file>images/hanged.jpg</file>
+        <file>images/images.jpg</file>
+        <file>images/inverters.jpg</file>
+        <file>images/panel.jpg</file>
+        <file>images/panel2.jpg</file>
+        <file>images/smartups.gif</file>
+        <file>images/smartups.png</file>
+        <file>images/newspaper.png</file>
+        <file>images/view.png</file>
+        <file>images/printer.png</file>
+        <file>images/solarPlate.jpg</file>
+        <file>images/solar_background.jpg</file>
+        <file>images/solar-panels-solar-energy-wallpaper-768x432.jpg</file>
+        <file>images/solar-energy-icon.png</file>
+    </qresource>
+</RCC>
