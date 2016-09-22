@@ -4,6 +4,7 @@
 #include "formpvarraysizing.h"
 #include "formsolarstoragesizing.h"
 #include "forminvertersizing.h"
+#include "formchargecontrollersizing.h"
 
 FormRecomendedPVSystem::FormRecomendedPVSystem(QWidget *parent) :
     QWidget(parent),
@@ -26,13 +27,13 @@ FormRecomendedPVSystem::~FormRecomendedPVSystem()
 void FormRecomendedPVSystem::inverterFrame()
 {
     ui->powerRatingLabel->setText (QString::number (FormInverterSizing::getInverterPowerRating ()));
-//    ui->dcToAcLabel->setText ();
+    ui->systemVoltageLabel->setText (QString::number(FormPVArraySizing::getDcSystemVoltage()));
 }
 
 void FormRecomendedPVSystem::chargeControllerFrame()
 {
-//    ui->regulatorVoltageLabel->setText ();
-//    ui->ratedCurrentLabel->setText ();
+    ui->regulatorVoltageLabel->setText (QString::number(FormPVArraySizing::getDcSystemVoltage()));
+    ui->ratedCurrentLabel->setText (QString::number(FormChargeControllerSizing::getChargeCtrlCurrRating()));
 }
 
 void FormRecomendedPVSystem::pvArrayFrame()
@@ -56,7 +57,7 @@ void FormRecomendedPVSystem::solarStorageFrame()
 
 void FormRecomendedPVSystem::latitudeFrame()
 {
-    ui->latitudeLabel->setText (QString::number (FormResourseEstimation::getLatitude()));
+//    ui->latitudeLabel->setText (QString::number (FormResourseEstimation::getLatitude()));
 }
 
 void FormRecomendedPVSystem::updateUI()
