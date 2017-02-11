@@ -53,13 +53,13 @@ QString FormResourseEstimation::getEstimate(int n, float angle)
     double hour_angle = qAcos(-qTan (latitude) * qTan(angle));
 //    qDebug() << "hour angle " << hour_angle;
 
-    double solar_constant = (24*3600)/3.142;
+    double solar_constant = (24*3600*1360)/3.142;
 //    qDebug() << "Solar const " << solar_constant;
 
     double n_const = (1 + 0.033 * qCos((360*n)/365) );
 //    qDebug() << "n const " << n_const;
 
-    double hour_angle_const = (qCos(latitude)*qCos(angle)*qCos(hour_angle)) + ((3.142)*hour_angle*qSin(latitude)*qSin(angle))/180;
+    double hour_angle_const = (qCos(latitude)*qCos(angle)*qSin(hour_angle)) + (((3.142)*hour_angle*qSin(latitude)*qSin(angle))/180);
 //    qDebug() << "hour Angle const " << hour_angle_const;
 
     double monthly = solar_constant * n_const * hour_angle_const;

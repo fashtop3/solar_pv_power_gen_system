@@ -19,9 +19,9 @@ FormInverterSizing::FormInverterSizing(QWidget *parent) :
         ui->overallComboBox->addItem (QString::number ((double) i));
 
     connect(ui->ac120vRadioButton, static_cast<void (QRadioButton::*) (bool)>
-                     (&ui->ac120vRadioButton->clicked), this, &this->acRadioChanged);
+                     (&QRadioButton::clicked), this, &FormInverterSizing::acRadioChanged);
     connect (ui->ac240vRadioButton, static_cast<void (QRadioButton::*) (bool)>
-                     (&ui->ac240vRadioButton->clicked), this, &this->acRadioChanged);
+                     (&QRadioButton::clicked), this, &FormInverterSizing::acRadioChanged);
 
     ui->ac120vRadioButton->setChecked (true);
     acRadioChanged ();

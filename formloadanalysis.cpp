@@ -24,12 +24,12 @@ FormLoadAnalysis::FormLoadAnalysis(QWidget *parent) :
     ui->deletePushButton->setDisabled(true);
     ui->calcPushButton->setEnabled (false);
 
-    connect(ui->acRadioButton, &ui->acRadioButton->toggled, [=](bool checked) {
+    connect(ui->acRadioButton, &QRadioButton::toggled, [=](bool checked) {
         if(checked)
             setLoad("AC");
     });
 
-    connect(ui->dcRadioButton, &ui->acRadioButton->toggled, [=](bool checked) {
+    connect(ui->dcRadioButton, &QRadioButton::toggled, [=](bool checked) {
         if(checked)
             setLoad ("DC");
     });
@@ -48,9 +48,9 @@ FormLoadAnalysis::FormLoadAnalysis(QWidget *parent) :
     ui->appTableWidget->setItemDelegate (new LoadAnalysisDelegate);
     ui->appTableWidget->resizeColumnsToContents ();
 
-    connect (ui->appTableWidget, &ui->appTableWidget->cellChanged, this, &this->cellChanged);
-    connect(ui->appTableWidget, &ui->appTableWidget->cellClicked,
-                ui->appTableWidget, &ui->appTableWidget->resizeColumnsToContents);
+    connect (ui->appTableWidget, &QTableWidget::cellChanged, this, &FormLoadAnalysis::cellChanged);
+    connect(ui->appTableWidget, &QTableWidget::cellClicked,
+                ui->appTableWidget, &QTableWidget::resizeColumnsToContents);
 }
 
 FormLoadAnalysis::~FormLoadAnalysis()

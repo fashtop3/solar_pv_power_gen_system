@@ -40,8 +40,8 @@ FormPVArraySizing::FormPVArraySizing(QWidget *parent) :
     ui->dc12vRadioButton->setChecked (true);
     radioButtonClicked ();
 
-    connect (ui->dcCurrentOfASinglePVLineEdit, &ui->dcCurrentOfASinglePVLineEdit->textChanged, this, &enableCalcPushButton);
-    connect (ui->dcVoltageOfASinglePVLineEdit, &ui->dcVoltageOfASinglePVLineEdit->textChanged, this, &enableCalcPushButton);
+    connect (ui->dcCurrentOfASinglePVLineEdit, &QLineEdit::textChanged, this, &FormPVArraySizing::enableCalcPushButton);
+    connect (ui->dcVoltageOfASinglePVLineEdit, &QLineEdit::textChanged, this, &FormPVArraySizing::enableCalcPushButton);
 }
 
 FormPVArraySizing::~FormPVArraySizing()

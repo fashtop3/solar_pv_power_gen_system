@@ -22,24 +22,24 @@ PreferenceDialog::PreferenceDialog(QWidget *parent) :
     setStackWidgetItems();
 
     //enable next frame
-    connect (formResourseEstimation, &formResourseEstimation->isResolved,
-             formLoadAnalysis, &formLoadAnalysis->setEnabled);
+    connect (formResourseEstimation, &FormResourseEstimation::isResolved,
+             formLoadAnalysis, &FormLoadAnalysis::setEnabled);
 
     //enable next frame
-    connect (formLoadAnalysis, &formLoadAnalysis->isResolved,
-             formPVArraySizing, &formPVArraySizing->setEnabled);
+    connect (formLoadAnalysis, &FormLoadAnalysis::isResolved,
+             formPVArraySizing, &FormPVArraySizing::setEnabled);
 
      //enable next frame
-    connect (formPVArraySizing, &formPVArraySizing->isResolved,
-             formChargeControllerSizing, &formChargeControllerSizing->setEnabled);
+    connect (formPVArraySizing, &FormPVArraySizing::isResolved,
+             formChargeControllerSizing, &FormChargeControllerSizing::setEnabled);
 
     //enable next frame
-    connect (formChargeControllerSizing, &formChargeControllerSizing->isResolved,
-             formInverterSizing, &formInverterSizing->setEnabled);
+    connect (formChargeControllerSizing, &FormChargeControllerSizing::isResolved,
+             formInverterSizing, &FormInverterSizing::setEnabled);
 
     //enable next frame
-    connect (formInverterSizing, &formInverterSizing->isResolved,
-             formSolarStorageSizing, &formSolarStorageSizing->setEnabled);
+    connect (formInverterSizing, &FormInverterSizing::isResolved,
+             formSolarStorageSizing, &FormSolarStorageSizing::setEnabled);
 
     connect(ui->listWidget, SIGNAL(currentRowChanged(int)), ui->stackedWidget, SLOT(setCurrentIndex(int)));
 
