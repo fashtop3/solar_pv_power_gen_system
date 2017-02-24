@@ -13,10 +13,6 @@ FormRecomendedPVSystem::FormRecomendedPVSystem(QWidget *parent) :
     ui->setupUi(this);
 
     ui->printPushButton->setEnabled (false);
-
-    updateUI();
-
-    connect (ui->updatePushButton, SIGNAL(clicked()), this, SLOT(updateUI()));
 }
 
 FormRecomendedPVSystem::~FormRecomendedPVSystem()
@@ -24,55 +20,73 @@ FormRecomendedPVSystem::~FormRecomendedPVSystem()
     delete ui;
 }
 
-void FormRecomendedPVSystem::inverterFrame()
+void FormRecomendedPVSystem::enablePrint(bool enable)
 {
-    ui->powerRatingLabel->setText (QString::number (FormInverterSizing::getInverterPowerRating ()));
-    ui->systemVoltageLabel->setText (QString::number(FormPVArraySizing::getDcSystemVoltage()));
+    ui->printPushButton->setEnabled(enable);
 }
 
-void FormRecomendedPVSystem::chargeControllerFrame()
+void FormRecomendedPVSystem::onOverallModReq(int value)
 {
-    ui->regulatorVoltageLabel->setText (QString::number(FormPVArraySizing::getDcSystemVoltage()));
-    ui->ratedCurrentLabel->setText (QString::number(FormChargeControllerSizing::getChargeCtrlCurrRating()));
+    ui->totalNumberPVModulesLabel->setText (QString::number (value));
 }
 
-void FormRecomendedPVSystem::pvArrayFrame()
+void FormRecomendedPVSystem::onReqModInSeries(int value)
 {
-    ui->totalNumberPVModulesLabel->setText (QString::number (FormPVArraySizing::getOverallModReq ()));
-    ui->numberOfPVParallelLabel->setText (QString::number (FormPVArraySizing::getReqModInParallel ()));
-    ui->numberOfPVSeriesLabel->setText (QString::number (FormPVArraySizing::getReqModInSeries ()));
-//    ui->ratedPVVoltageLabel->setText ();
-//    ui->ratedCurrentPVSinglePanelLabel->setText ();
-//    ui->ratedPowerPVSinglePanelLabel->setText ();
+    ui->numberOfPVSeriesLabel->setText (QString::number (value));
 }
 
-void FormRecomendedPVSystem::solarStorageFrame()
+void FormRecomendedPVSystem::onReqModInParallel(int value)
 {
-    ui->totalNumberBatteriesLabel->setText (QString::number (FormSolarStorageSizing::getTotalReqBatt ()));
-    ui->numberOfBatteriesInSeriesLabel->setText (QString::number (FormSolarStorageSizing::getTotalSeriesBatt ()));
-    ui->numberOfBatteriesInParallelLabel->setText (QString::number (FormSolarStorageSizing::getTotalParallelBatt ()));
-//    ui->ratedBatteryVoltageLabel->setText ();
-//    ui->ampereCapacityLabel->setText ();
+    ui->numberOfPVParallelLabel->setText (QString::number (value));
 }
 
-void FormRecomendedPVSystem::latitudeFrame()
+void FormRecomendedPVSystem::onDcSystemVoltage(int value)
 {
-//    ui->latitudeLabel->setText (QString::number (FormResourseEstimation::getLatitude()));
+    ui->regulatorVoltageLabel->setText (QString::number(value) + "V");
+    ui->systemVoltageLabel->setText (QString::number(value) + "V");
 }
 
-void FormRecomendedPVSystem::updateUI()
+void FormRecomendedPVSystem::onDcVoltageSinglePV(double voltage)
 {
-    inverterFrame ();
-    chargeControllerFrame ();
-    pvArrayFrame ();
-    solarStorageFrame ();
-    latitudeFrame ();
+    ui->ratedPVVoltageLabel->setText (QString::number(voltage) + "V");
+}
 
-    ui->printPushButton->setEnabled (true);
+void FormRecomendedPVSystem::onDcCurrentSinglePV(double current)
+{
+    ui->ratedCurrentPVSinglePanelLabel->setText (QString::number(current) + "A");
+}
+
+void FormRecomendedPVSystem::onInverterPowerRating(double power)
+{
+    ui->powerRatingLabel->setText (QString::number (power) + "W");
+}
+
+void FormRecomendedPVSystem::onChargeCtrlCurrRating(double chargeCtrlCurr)
+{
+    ui->ratedCurrentLabel->setText (QString::number(chargeCtrlCurr) + "A");
+}
+
+void FormRecomendedPVSystem::onTotalReqBatt(int batteries)
+{
+    ui->totalNumberBatteriesLabel->setText (QString::number (batteries));
+}
+
+void FormRecomendedPVSystem::onTotalSeriesBatt(int batteries)
+{
+    ui->numberOfBatteriesInSeriesLabel->setText (QString::number (batteries));
+}
+
+void FormRecomendedPVSystem::onTotalParallelBatt(int batteries)
+{
+    ui->numberOfBatteriesInParallelLabel->setText (QString::number (batteries));
+}
+
+void FormRecomendedPVSystem::onPowerOfASinglePV(double power)
+{
+    ui->ratedPowerPVSinglePanelLabel->setText (QString::number (power));
 }
 
 void FormRecomendedPVSystem::print()
 {
-    updateUI();
     //TODO: design print to output pdf
 }

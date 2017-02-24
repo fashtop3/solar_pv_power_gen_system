@@ -1,6 +1,7 @@
 #include "formresourseestimation.h"
 #include "ui_formresourseestimation.h"
 #include <QtMath>
+#include <cmath>
 #include <QDebug>
 
 double FormResourseEstimation::latitude;
@@ -50,23 +51,45 @@ QString FormResourseEstimation::getEstimate(int n, float angle)
     double latitude = ui->latitudeLineEdit->text ().toDouble ();
 //    qDebug() << "latitude " << latitude;
 
-    double hour_angle = qAcos(-qTan (latitude) * qTan(angle));
+    double lat_result = -qTan (qDegreesToRadians(float(latitude)));
+    double angle_result = qTan(qDegreesToRadians(float(angle)));
+
+    double arc_calc = (lat_result * angle_result);
+
+    double hour_angle = qRadiansToDegrees(qAcos((arc_calc)));
+
+//    double hour_angle = qAcos(1 * 1);
 //    qDebug() << "hour angle " << hour_angle;
 
-    double solar_constant = (24*3600*1360)/3.142;
+    double solar_constant = (24*3600*1367)/3.142;
 //    qDebug() << "Solar const " << solar_constant;
 
-    double n_const = (1 + 0.033 * qCos((360*n)/365) );
-//    qDebug() << "n const " << n_const;
+    ////////////
+    /// \brief solar_constant
+    /// Left side calculations
+    ////////////
 
-    double hour_angle_const = (qCos(latitude)*qCos(angle)*qSin(hour_angle)) + (((3.142)*hour_angle*qSin(latitude)*qSin(angle))/180);
-//    qDebug() << "hour Angle const " << hour_angle_const;
+    double n_const = (1 + 0.033 * qCos( qDegreesToRadians(float((360*n)/365))) );
+
+
+    /////////
+    /// \brief hour_angle_const
+    /// Right side calculations
+    //////
+
+    double r1 = qCos(qDegreesToRadians(float(latitude))) ;
+    double r2 = qCos(qDegreesToRadians(float(angle)));
+    double r3 = qSin(qDegreesToRadians(float(hour_angle)));
+
+    double r4 = qSin(qDegreesToRadians(float(latitude)));
+    double r5 = qSin(qDegreesToRadians(float(angle)));
+
+    double hour_angle_const = ( r1*r2*r3 ) + ( ( (3.142)*hour_angle*r4*r5)/180 );
 
     double monthly = solar_constant * n_const * hour_angle_const;
-//    qDebug() << "monthly " << monthly;
 
     emit isResolved(true);
-    return QString::number(monthly);
+    return QString::number(monthly/1000000, 'f', 3);
 }
 double &FormResourseEstimation::getLatitude()
 {
@@ -77,7 +100,6 @@ void FormResourseEstimation::setLatitude(double value)
 {
     latitude = value;
 }
-
 
 void FormResourseEstimation::on_latitudeLineEdit_textChanged(const QString &arg1)
 {

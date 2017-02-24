@@ -23,6 +23,8 @@ public:
     explicit PreferenceDialog(QWidget *parent = 0);
     ~PreferenceDialog();
 
+protected:
+    void connections();
 private:
     void setStackWidgetItems();
 

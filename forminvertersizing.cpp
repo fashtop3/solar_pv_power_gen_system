@@ -4,9 +4,6 @@
 
 //int FormInverterSizing::acSyatemVoltage;
 
-int FormInverterSizing::acSystemVoltage;
-double FormInverterSizing::inverterPowerRating;
-double FormInverterSizing::inverterCurrentRating;
 
 FormInverterSizing::FormInverterSizing(QWidget *parent) :
     QWidget(parent),
@@ -26,8 +23,8 @@ FormInverterSizing::FormInverterSizing(QWidget *parent) :
     ui->ac120vRadioButton->setChecked (true);
     acRadioChanged ();
 
-    setInverterPowerRating (0);
-    setInverterCurrentRating (0);
+    _inverterPowerRating = 0;
+    _inverterCurrentRating = 0;
 }
 
 FormInverterSizing::~FormInverterSizing()
@@ -38,52 +35,29 @@ FormInverterSizing::~FormInverterSizing()
 void FormInverterSizing::acRadioChanged()
 {
     if(ui->ac120vRadioButton->isChecked ())
-        setAcSystemVoltage (120);
+        _acSystemVoltage = 120;
 
     else //if(ui->ac240vRadioButton->isChecked ())
-        setAcSystemVoltage (240);
-}
-double FormInverterSizing::getInverterCurrentRating()
-{
-    return inverterCurrentRating;
-}
+        _acSystemVoltage = 240;
 
-void FormInverterSizing::setInverterCurrentRating(double value)
-{
-    inverterCurrentRating = value;
+    emit acSystemVoltage(_acSystemVoltage);
 }
-
-
-int FormInverterSizing::getAcSystemVoltage()
-{
-    return acSystemVoltage;
-}
-
-void FormInverterSizing::setAcSystemVoltage(int value)
-{
-    acSystemVoltage = value;
-}
-
 
 void FormInverterSizing::on_calculatePushButton_clicked()
 {
-    setInverterPowerRating (FormLoadAnalysis::getETotalEnergy () * 1.25);
-    setInverterCurrentRating (getInverterPowerRating () /
-                              (getAcSystemVoltage () * ui->overallComboBox->currentText ().toDouble ()) );
+    _inverterPowerRating = (_eTotalEnergy * 1.25);
+    _inverterCurrentRating = (_inverterPowerRating /
+                              (_acSystemVoltage * ui->overallComboBox->currentText ().toDouble ()) );
 
-    ui->inverterPowerLabel->setText (QString::number (getInverterPowerRating ()) + "W");
-    ui->inverterCurrentLabel->setText (QString::number (getInverterCurrentRating ()) + "A");
+    ui->inverterPowerLabel->setText (QString::number (_inverterPowerRating) + "W");
+    ui->inverterCurrentLabel->setText (QString::number (_inverterCurrentRating) + "A");
 
     emit isResolved(true);
+    emit inverterPowerRating(_inverterPowerRating);
+    emit inverterCurrentRating(_inverterCurrentRating);
 }
 
-double FormInverterSizing::getInverterPowerRating()
+void FormInverterSizing::onETotalEnergy(double value)
 {
-    return inverterPowerRating;
+    _eTotalEnergy = value;
 }
-
-void FormInverterSizing::setInverterPowerRating(double value)
-{
-    inverterPowerRating = value;
-}
-

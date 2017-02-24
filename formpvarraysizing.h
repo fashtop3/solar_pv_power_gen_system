@@ -15,22 +15,18 @@ public:
     explicit FormPVArraySizing(QWidget *parent = 0);
     ~FormPVArraySizing();
 
-    static int getDcSystemVoltage();
-    static void setDcSystemVoltage(int value);
-
-    static int getReqModInParallel();
-    static void setReqModInParallel(int value);
-
-    static int getReqModInSeries();
-    static void setReqModInSeries(int value);
-
-    static int getOverallModReq();
-    static void setOverallModReq(int value);
-
 signals:
     void isResolved(bool resolve);
+    void overallModReq(int value);
+    void reqModInSeries (int value);
+    void reqModInParallel (int value);
+    void dcSystemVoltage(int value);
+    void dcVoltageSinglePV(double value);
+    void dcCurrentSinglePV(double value);
+    void powerOfASinglePV(double value);
 
 private slots:
+    void onETotalEnergy(double eTotalEnergy);
     void radioButtonClicked();
 
     void on_calcPushButton_clicked();
@@ -38,14 +34,14 @@ private slots:
 private:
     Ui::FormPVArraySizing *ui;
 
-    static int dcSystemVoltage;
+    int _seriesModule;
+    int _parallelModule;
+    int _allModule;
+    int _dcSystemVoltage;
 
-    static double totalPowPvArray;
-    static double totalRatedCurrPvArray;
-
-    static int reqModInParallel;
-    static int reqModInSeries;
-    static int overallModReq;
+    double _totalPowPvArray;
+    double _totalRatedCurrPvArray;
+    double _eTotalEnergy;
 
 private:
     void enableCalcPushButton();

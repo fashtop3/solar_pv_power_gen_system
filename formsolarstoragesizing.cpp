@@ -5,12 +5,6 @@
 #include <QtMath>
 #include <QDebug>
 
-double FormSolarStorageSizing::unadjustedBattCap;
-double FormSolarStorageSizing::adjustedBattCap;
-int FormSolarStorageSizing::totalReqBatt;
-int FormSolarStorageSizing::totalSeriesBatt;
-int FormSolarStorageSizing::totalParallelBatt;
-
 FormSolarStorageSizing::FormSolarStorageSizing(QWidget *parent) :
     QWidget(parent),
     ui(new Ui::FormSolarStorageSizing)
@@ -20,11 +14,11 @@ FormSolarStorageSizing::FormSolarStorageSizing(QWidget *parent) :
     ui->calculatePushButton->setEnabled (false);
 
     //init static var
-    setUnadjustedBattCap (0);
-    setAdjustedBattCap (0);
-    setTotalReqBatt (0);
-    setTotalSeriesBatt (0);
-    setTotalParallelBatt (0);
+    _unadjustedBattCap = 0;
+    _adjustedBattCap = 0;
+    _totalReqBatt = 0;
+    _totalSeriesBatt = 0;
+    _totalParallelBatt = 0;
 
     for(int i = 1; i<=28; i++)
         ui->daysOfAutonnomyComboBox->addItem (QString::number (i));
@@ -47,33 +41,54 @@ FormSolarStorageSizing::~FormSolarStorageSizing()
     delete ui;
 }
 
+void FormSolarStorageSizing::onDcSystemVoltage(int value)
+{
+    systemVoltageDC = value;
+}
+
+void FormSolarStorageSizing::onRegulation(double value)
+{
+    _regulation = value;
+}
+
 void FormSolarStorageSizing::on_calculatePushButton_clicked()
 {
     // do calculations
 
-    setUnadjustedBattCap ((FormLoadAnalysis::getETotal () * (ui->daysOfAutonnomyComboBox->currentIndex () + 1)) /
+    _unadjustedBattCap = ((_eTotal * (ui->daysOfAutonnomyComboBox->currentIndex () + 1)) /
                           ui->voltageOfAUnitBatteryVbattLineEdit->text ().toDouble ());
 
     double maxDepthOfDischarge = static_cast<double> ((ui->maxDepthOfDischargeComboBox->currentIndex () + 1)) / 100;
 //    double regulation = static_cast<double> (FormLoadAnalysis::getRegulation ())/100;
-    double regulation = FormLoadAnalysis::getRegulation ();
-    setAdjustedBattCap ( getUnadjustedBattCap () / (maxDepthOfDischarge * regulation) );
-    setTotalReqBatt (qCeil(static_cast<double>(getAdjustedBattCap ()) / ui->chosenCapacityOfOneBatteryUnitCbLineEdit->text ().toDouble ()));
-    setTotalSeriesBatt (qCeil (static_cast<double>(FormPVArraySizing::getDcSystemVoltage ()) / ui->voltageOfAUnitBatteryVbattLineEdit->text ().toDouble ()));
-    setTotalParallelBatt (qCeil (static_cast<double>(getTotalReqBatt ()) / getTotalSeriesBatt ()));
+
+    _adjustedBattCap = ( _unadjustedBattCap  / (maxDepthOfDischarge * _regulation) );
+    _totalReqBatt = (qCeil(static_cast<double>(_adjustedBattCap) / ui->chosenCapacityOfOneBatteryUnitCbLineEdit->text ().toDouble ()));
+    _totalSeriesBatt = (qCeil (static_cast<double>(systemVoltageDC) / ui->voltageOfAUnitBatteryVbattLineEdit->text ().toDouble ()));
+    _totalParallelBatt = (qCeil (static_cast<double>(_totalReqBatt ) / _totalSeriesBatt));
 
     setLabels (); // set values to the result frame
 
     emit isResolved (true);
+//    emit unadjustedBattCap(_unadjustedBattCap);
+//    emit adjustedBattCap(_adjustedBattCap);
+    emit totalReqBatt(_totalReqBatt);
+    emit totalSeriesBatt(_totalSeriesBatt);
+    emit totalParallelBatt(_totalParallelBatt);
+    emit enablePrintButton(true);
+}
+
+void FormSolarStorageSizing::onETotal(double eTotal)
+{
+    _eTotal = eTotal;
 }
 
 void FormSolarStorageSizing::setLabels()
 {
-    ui->unadjustedBatteryLabel->setText (QString::number (getUnadjustedBattCap ()));
-    ui->adjustedbatteryLabel->setText (QString::number(getAdjustedBattCap ()));
-    ui->totalNumberRequiredBatteryLabel->setText (QString::number (getTotalReqBatt ()));
-    ui->numberBatteriesInSeriesLabel->setText (QString::number (getTotalSeriesBatt ()));
-    ui->numberBatteriesInParallelLabel->setText (QString::number (getTotalParallelBatt ()));
+    ui->unadjustedBatteryLabel->setText (QString::number (_unadjustedBattCap));
+    ui->adjustedbatteryLabel->setText (QString::number(_adjustedBattCap));
+    ui->totalNumberRequiredBatteryLabel->setText (QString::number (_totalReqBatt));
+    ui->numberBatteriesInSeriesLabel->setText (QString::number (_totalSeriesBatt));
+    ui->numberBatteriesInParallelLabel->setText (QString::number (_totalParallelBatt));
 }
 
 void FormSolarStorageSizing::enableCalculateButton()

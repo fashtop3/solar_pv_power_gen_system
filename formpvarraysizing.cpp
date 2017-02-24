@@ -4,12 +4,6 @@
 #include <QtMath>
 #include <QDebug>
 
-int    FormPVArraySizing::dcSystemVoltage;
-double FormPVArraySizing::totalPowPvArray = 0;
-double FormPVArraySizing::totalRatedCurrPvArray = 0;
-int    FormPVArraySizing::reqModInParallel = 0;
-int    FormPVArraySizing::reqModInSeries = 0;
-int    FormPVArraySizing::overallModReq = 0;
 
 FormPVArraySizing::FormPVArraySizing(QWidget *parent) :
     QWidget(parent),
@@ -18,18 +12,15 @@ FormPVArraySizing::FormPVArraySizing(QWidget *parent) :
     ui->setupUi(this);
     setEnabled (false);
 
-    totalPowPvArray = 0;
-    totalRatedCurrPvArray = 0;
-
-    setReqModInParallel (0);
-    setReqModInSeries (0);
-    setOverallModReq (0);
+    _totalPowPvArray = 0;
+    _totalRatedCurrPvArray = 0;
 
     for(int i=1; i<=12; i++)
         ui->minimumPeakSunHoursDayComboBox->addItem (QString::number (i));
 
     ui->dcCurrentOfASinglePVLineEdit->setValidator (new QDoubleValidator(this));
     ui->dcVoltageOfASinglePVLineEdit->setValidator (new QDoubleValidator(this));
+    ui->powerOfASinglePVLineEdit->setValidator (new QDoubleValidator(this));
     ui->calcPushButton->setEnabled (false);
     ui->dc12vRadioButton->setChecked (true);
 
@@ -57,77 +48,45 @@ void FormPVArraySizing::enableCalcPushButton() {
 void FormPVArraySizing::on_calcPushButton_clicked()
 {
     //total rated power supplied by pv array
-    FormPVArraySizing::totalPowPvArray = FormLoadAnalysis::getETotalEnergy () / (ui->minimumPeakSunHoursDayComboBox->currentIndex () + 1);
-    ui->totalRatedPowerSuppliedPVArrayLabel->setText (QString::number (qCeil(FormPVArraySizing::totalPowPvArray)) + "W");
+    _totalPowPvArray = _eTotalEnergy / (ui->minimumPeakSunHoursDayComboBox->currentIndex () + 1);
+    ui->totalRatedPowerSuppliedPVArrayLabel->setText (QString::number (qCeil(_totalPowPvArray)) + "W");
 
     //total rated current of pv array
-    FormPVArraySizing::totalRatedCurrPvArray = FormPVArraySizing::totalPowPvArray / getDcSystemVoltage ();
-    ui->totalRatedCurrentPVArrayLabel->setText (QString::number (qCeil(FormPVArraySizing::totalRatedCurrPvArray)) + "A");
+    _totalRatedCurrPvArray = _totalPowPvArray / _dcSystemVoltage;
+    ui->totalRatedCurrentPVArrayLabel->setText (QString::number (qCeil(_totalRatedCurrPvArray)) + "A");
 
     //modules in parallel
-    setReqModInParallel (qCeil(FormPVArraySizing::totalRatedCurrPvArray / ui->dcCurrentOfASinglePVLineEdit->text ().toDouble ()));
-    ui->requiredNumberModuleParallellabel->setText (QString::number (getReqModInParallel ()));
+    _parallelModule = qCeil(_totalRatedCurrPvArray / ui->dcCurrentOfASinglePVLineEdit->text ().toDouble ());
+    _seriesModule = qCeil(_dcSystemVoltage / ui->dcVoltageOfASinglePVLineEdit->text ().toDouble ());
+    _allModule = qCeil(_seriesModule * _parallelModule);
 
-    //modules in series
-    setReqModInSeries (qCeil(getDcSystemVoltage() / ui->dcVoltageOfASinglePVLineEdit->text ().toDouble ()));
-    ui->requiredNumberModuleSeriesLabel->setText (QString::number (getReqModInSeries ()));
-
-    //overall
-    setOverallModReq (qCeil(FormPVArraySizing::reqModInSeries * FormPVArraySizing::reqModInParallel));
-    ui->overallNumberModuleReqLabel->setText (QString::number (getOverallModReq ()));
+    ui->requiredNumberModuleParallellabel->setText (QString::number (_parallelModule));
+    ui->requiredNumberModuleSeriesLabel->setText (QString::number (_seriesModule));
+    ui->overallNumberModuleReqLabel->setText (QString::number (_allModule));
 
     emit isResolved(true);
-}
-
-int FormPVArraySizing::getOverallModReq()
-{
-    return overallModReq;
-}
-
-void FormPVArraySizing::setOverallModReq(int value)
-{
-    overallModReq = value;
+    emit reqModInParallel (_parallelModule);
+    emit reqModInSeries (_seriesModule);
+    emit overallModReq(_allModule);
+    emit dcSystemVoltage(_dcSystemVoltage);
+    emit dcVoltageSinglePV(ui->dcVoltageOfASinglePVLineEdit->text ().toDouble ());
+    emit dcCurrentSinglePV(ui->dcCurrentOfASinglePVLineEdit->text ().toDouble ());
+    emit powerOfASinglePV(ui->powerOfASinglePVLineEdit->text ().toDouble ());
 }
 
 void FormPVArraySizing::radioButtonClicked()
 {
     if(ui->dc12vRadioButton->isChecked ())
-        setDcSystemVoltage (12);
+        _dcSystemVoltage = 12;
     else if(ui->dc24vRadioButton->isChecked ())
-        setDcSystemVoltage (24);
+        _dcSystemVoltage = 24;
     else
-        setDcSystemVoltage (48);
+        _dcSystemVoltage = 48;
 }
 
-int FormPVArraySizing::getReqModInSeries()
+void FormPVArraySizing::onETotalEnergy(double eTotalEnergy)
 {
-    return reqModInSeries;
+    _eTotalEnergy = eTotalEnergy;
 }
-
-void FormPVArraySizing::setReqModInSeries(int value)
-{
-    reqModInSeries = value;
-}
-
-int FormPVArraySizing::getReqModInParallel()
-{
-    return reqModInParallel;
-}
-
-void FormPVArraySizing::setReqModInParallel(int value)
-{
-    reqModInParallel = value;
-}
-
-int FormPVArraySizing::getDcSystemVoltage()
-{
-    return dcSystemVoltage;
-}
-
-void FormPVArraySizing::setDcSystemVoltage(int value)
-{
-    dcSystemVoltage = value;
-}
-
 
 

@@ -122,6 +122,16 @@
        <item row="0" column="1">
         <widget class="QComboBox" name="minimumPeakSunHoursDayComboBox"/>
        </item>
+       <item row="3" column="0">
+        <widget class="QLabel" name="dCVoltageOfASinglePVLabel_2">
+         <property name="text">
+          <string>Power of a single PV</string>
+         </property>
+        </widget>
+       </item>
+       <item row="3" column="1">
+        <widget class="QLineEdit" name="powerOfASinglePVLineEdit"/>
+       </item>
       </layout>
      </item>
      <item>

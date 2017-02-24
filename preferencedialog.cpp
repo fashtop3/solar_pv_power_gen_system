@@ -45,6 +45,8 @@ PreferenceDialog::PreferenceDialog(QWidget *parent) :
 
     ui->stackedWidget->setCurrentWidget (formLoadAnalysis);
 
+    connections();
+
     setWindowTitle ("Power generation preferences");
 }
 
@@ -62,4 +64,45 @@ void PreferenceDialog::setStackWidgetItems()
     ui->stackedWidget->addWidget (formInverterSizing);
     ui->stackedWidget->addWidget (formSolarStorageSizing);
     ui->stackedWidget->addWidget (formRecomendedPVSystem);
+}
+
+void PreferenceDialog::connections()
+{
+    ////////
+    /// \brief make connections to recommendation system
+    ////////
+    connect(formPVArraySizing, SIGNAL(overallModReq(int)), formRecomendedPVSystem, SLOT(onOverallModReq(int)));
+    connect(formPVArraySizing, SIGNAL(reqModInSeries(int)), formRecomendedPVSystem, SLOT(onReqModInSeries(int)));
+    connect(formPVArraySizing, SIGNAL(reqModInParallel(int)), formRecomendedPVSystem, SLOT(onReqModInParallel(int)));
+    connect(formPVArraySizing, SIGNAL(dcSystemVoltage(int)), formRecomendedPVSystem, SLOT(onDcSystemVoltage(int)));
+    connect(formPVArraySizing, SIGNAL(dcVoltageSinglePV(double)), formRecomendedPVSystem, SLOT(onDcVoltageSinglePV(double)));
+    connect(formPVArraySizing, SIGNAL(dcCurrentSinglePV(double)), formRecomendedPVSystem, SLOT(onDcCurrentSinglePV(double)));
+
+
+    ////
+    /// \brief make connections to charge controller sizing
+    ///
+    connect(formPVArraySizing, SIGNAL(reqModInParallel(int)), formChargeControllerSizing, SLOT(onReqModInParallel(int)));
+
+
+    connect(formPVArraySizing, SIGNAL(dcSystemVoltage(int)), formSolarStorageSizing, SLOT(onDcSystemVoltage(int)));
+
+    connect(formLoadAnalysis, SIGNAL(regulation(double)), formSolarStorageSizing, SLOT(onRegulation(double)));
+    connect(formLoadAnalysis, SIGNAL(eTotal(double)), formSolarStorageSizing, SLOT(onETotal(double)));
+
+    connect(formLoadAnalysis, SIGNAL(eTotalEnergy(double)), formInverterSizing, SLOT(onETotalEnergy(double)));
+
+    connect(formLoadAnalysis, SIGNAL(eTotalEnergy(double)), formPVArraySizing, SLOT(onETotalEnergy(double)));
+
+
+    connect(formChargeControllerSizing, SIGNAL(chargeCtrlCurrRating(double)), formRecomendedPVSystem, SLOT(onChargeCtrlCurrRating(double)));
+
+    connect(formSolarStorageSizing, SIGNAL(totalReqBatt(int)), formRecomendedPVSystem, SLOT(onTotalReqBatt(int)));
+    connect(formSolarStorageSizing, SIGNAL(totalSeriesBatt(int)), formRecomendedPVSystem, SLOT(onTotalSeriesBatt(int)));
+    connect(formSolarStorageSizing, SIGNAL(totalParallelBatt(int)), formRecomendedPVSystem, SLOT(onTotalParallelBatt(int)));
+    connect(formSolarStorageSizing, SIGNAL(enablePrintButton(bool)), formRecomendedPVSystem, SLOT(enablePrint(bool)));
+
+    connect(formInverterSizing, SIGNAL(inverterPowerRating(double)), formRecomendedPVSystem, SLOT(onInverterPowerRating(double)));
+    connect(formPVArraySizing, SIGNAL(powerOfASinglePV(double)), formRecomendedPVSystem, SLOT(onPowerOfASinglePV(double)));
+
 }

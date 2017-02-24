@@ -15,23 +15,12 @@ public:
     explicit FormLoadAnalysis(QWidget *parent = 0);
     ~FormLoadAnalysis();
 
-    static double getETotal();
-    static void setETotal(double value);
-
-    static double getETotalEnergy();
-    static void setETotalEnergy(double value);
-
-//    static int getRegulation();
-//    static void setRegulation(int value);
-
-    static QString getLoad() { return load; }
-    static void setLoad(const QString &value) { load = value; }
-
-    static double getRegulation();
-    static void setRegulation(double value);
-
 signals:
     void isResolved(bool resolve);
+    void regulation(double value);
+    void eTotal(double value);
+    void eTotalEnergy(double value);
+    void load(QString value);
 
 private slots:
 
@@ -59,10 +48,10 @@ private:
         ENEREGY_COL
     };
 
-    static double eTotal;
-    static double eTotalEnergy;
-    static double regulation;
-    static QString load;
+    double _eTotal;
+    double _eTotalEnergy;
+    double _regulation;
+    QString _load;
 };
 
 #endif // FORMLOADANALYSIS_H

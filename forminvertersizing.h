@@ -15,29 +15,26 @@ public:
     explicit FormInverterSizing(QWidget *parent = 0);
     ~FormInverterSizing();
 
-    static int getAcSystemVoltage();
-    static void setAcSystemVoltage(int value);
-
-    static double getInverterPowerRating();
-    static void setInverterPowerRating(double value);
-
-    static double getInverterCurrentRating();
-    static void setInverterCurrentRating(double value);
-
 signals:
     void isResolved(bool resolved);
+    void inverterPowerRating(double power);
+    void inverterCurrentRating(double current);
+    void acSystemVoltage(int voltage);
 
 private slots:
     void on_calculatePushButton_clicked();
+    void onETotalEnergy(double value);
 
     void acRadioChanged();
 
 private:
     Ui::FormInverterSizing *ui;
 
-    static int acSystemVoltage;
-    static double inverterPowerRating;
-    static double inverterCurrentRating;
+    int _acSystemVoltage;
+    double _inverterPowerRating;
+    double _inverterCurrentRating;
+
+    double _eTotalEnergy;
 };
 
 #endif // FORMINVERTERSIZING_H

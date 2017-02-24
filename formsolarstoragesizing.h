@@ -15,39 +15,41 @@ public:
     explicit FormSolarStorageSizing(QWidget *parent = 0);
     ~FormSolarStorageSizing();
 
-    static double getUnadjustedBattCap(){ return unadjustedBattCap; }
-    static void setUnadjustedBattCap(double value) {  unadjustedBattCap = value; }
-
-    static double getAdjustedBattCap() { return adjustedBattCap; }
-    static void setAdjustedBattCap(double value) { adjustedBattCap = value; }
-
-    static int getTotalReqBatt(){ return totalReqBatt; }
-    static void setTotalReqBatt(int value) { totalReqBatt = value; }
-
-    static int getTotalSeriesBatt() { return totalSeriesBatt; }
-    static void setTotalSeriesBatt(int value) { totalSeriesBatt = value; }
-
-    static int getTotalParallelBatt(){ return totalParallelBatt; }
-    static void setTotalParallelBatt(int value) { totalParallelBatt = value; }
-
 signals:
     void isResolved(bool);
+//    void unadjustedBattCap(double uBattCap);
+//    void adjustedBattCap(double aBattCap);
+    void totalReqBatt(int tReqBatt);
+    void totalSeriesBatt(int tSeriesBatt);
+    void totalParallelBatt(int tParallelBatt);
+    void enablePrintButton(bool enable);
+
+public slots:
+    void onDcSystemVoltage(int value);
+    void onRegulation(double value);
+
 
 private slots:
     void on_calculatePushButton_clicked();
+    void onETotal(double eTotal);
 
     void enableCalculateButton();
 private:
     Ui::FormSolarStorageSizing *ui;
 
-    static double unadjustedBattCap;
-    static double adjustedBattCap;
-    static int totalReqBatt;
-    static int totalSeriesBatt;
-    static int totalParallelBatt;
+    double _unadjustedBattCap;
+    double _adjustedBattCap;
+    int _totalReqBatt;
+    int _totalSeriesBatt;
+    int _totalParallelBatt;
+
+    int systemVoltageDC;
 
 private:
     void setLabels();
+
+    double _regulation;
+    double _eTotal;
 };
 
 #endif // FORMSOLARSTORAGESIZING_H

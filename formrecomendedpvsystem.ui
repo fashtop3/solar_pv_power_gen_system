@@ -336,13 +336,6 @@
       </spacer>
      </item>
      <item>
-      <widget class="QPushButton" name="updatePushButton">
-       <property name="text">
-        <string>&amp;Update</string>
-       </property>
-      </widget>
-     </item>
-     <item>
       <widget class="QPushButton" name="printPushButton">
        <property name="text">
         <string>&amp;Print</string>

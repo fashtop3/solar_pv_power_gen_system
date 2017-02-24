@@ -15,11 +15,12 @@ public:
     explicit FormChargeControllerSizing(QWidget *parent = 0);
     ~FormChargeControllerSizing();
 
-    static double getChargeCtrlCurrRating() { return chargeCtrlCurrRating; }
-    static void setChargeCtrlCurrRating(double value) { chargeCtrlCurrRating = value; }
-
 signals:
     void isResolved(bool resolve);
+    void chargeCtrlCurrRating(double chargeCtrlCurr);
+
+public slots:
+    void onReqModInParallel (int value);
 
 private slots:
     void on_calculatePushButton_clicked();
@@ -27,7 +28,8 @@ private slots:
 private:
     Ui::FormChargeControllerSizing *ui;
 
-    static double chargeCtrlCurrRating;
+    double _chargeCtrlCurrRating;
+    int _reqModInParallel;
 };
 
 #endif // FORMCHARGECONTROLLERSIZING_H

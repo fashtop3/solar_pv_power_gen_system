@@ -16,15 +16,24 @@ public:
     ~FormRecomendedPVSystem();
 
 public slots:
-    void inverterFrame();
-    void chargeControllerFrame();
-    void pvArrayFrame();
-    void solarStorageFrame();
-    void latitudeFrame();
-
+    void enablePrint(bool enable);
     void print();
-    void updateUI();
 
+public slots:
+    void onOverallModReq(int value);
+    void onReqModInSeries (int value);
+    void onReqModInParallel (int value);
+    void onDcSystemVoltage(int value);
+    void onDcVoltageSinglePV(double voltage);
+    void onDcCurrentSinglePV(double current);
+    void onInverterPowerRating (double power);
+    void onChargeCtrlCurrRating(double chargeCtrlCurr);
+    void onTotalReqBatt(int batteries);
+    void onTotalSeriesBatt(int batteries);
+    void onTotalParallelBatt(int batteries);
+//    void onRegulatorVoltage(int voltage);
+
+    void onPowerOfASinglePV(double power);
 private:
     Ui::FormRecomendedPVSystem *ui;
 

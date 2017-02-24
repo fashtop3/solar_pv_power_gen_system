@@ -4,11 +4,6 @@
 #include <QDebug>
 #include <QLineEdit>
 
-double FormLoadAnalysis::eTotal = 0.0;
-double FormLoadAnalysis::eTotalEnergy = 0.0;
-double FormLoadAnalysis::regulation;
-QString FormLoadAnalysis::load;
-
 FormLoadAnalysis::FormLoadAnalysis(QWidget *parent) :
     QWidget(parent),
     ui(new Ui::FormLoadAnalysis)
@@ -17,21 +12,21 @@ FormLoadAnalysis::FormLoadAnalysis(QWidget *parent) :
 
     setEnabled (false);
 
-    setETotal (0);
-    setETotalEnergy (0);
-    setRegulation (0);
+    _eTotal = 0;
+    _eTotalEnergy = 0;
+    _regulation = 0;
 
     ui->deletePushButton->setDisabled(true);
     ui->calcPushButton->setEnabled (false);
 
     connect(ui->acRadioButton, &QRadioButton::toggled, [=](bool checked) {
         if(checked)
-            setLoad("AC");
+            _load = "AC";
     });
 
     connect(ui->dcRadioButton, &QRadioButton::toggled, [=](bool checked) {
         if(checked)
-            setLoad ("DC");
+            _load = "DC";
     });
 
     ui->acRadioButton->setChecked (true);
@@ -83,12 +78,19 @@ void FormLoadAnalysis::on_resetPushButton_clicked()
     ui->appTableWidget->setRowCount (0);
     ui->deletePushButton->setDisabled (true);
     ui->calcPushButton->setDisabled (true);
+    ui->eTotalEnergyLabel->setText("0");
+    ui->eTotalLabel->setText("0");
+    emit isResolved(false);
 }
 
 void FormLoadAnalysis::on_calcPushButton_clicked()
 {
     calculateEtotal();
     emit isResolved(true);
+    emit regulation(_regulation);
+    emit eTotal(_eTotal);
+    emit eTotalEnergy(_eTotalEnergy);
+    emit load(_load);
 }
 
 void FormLoadAnalysis::cellChanged(int row, int col)
@@ -115,15 +117,6 @@ void FormLoadAnalysis::enableDeleteButton(int row, int col)
 {
     ui->deletePushButton->setDisabled (row == -1);
 }
-double FormLoadAnalysis::getETotal()
-{
-    return eTotal;
-}
-
-void FormLoadAnalysis::setETotal(double value)
-{
-    eTotal = value;
-}
 
 void FormLoadAnalysis::calculateEtotal() {
 
@@ -138,39 +131,19 @@ void FormLoadAnalysis::calculateEtotal() {
     }
 
     //set values for eTotal var and label
-    setETotal (sum);
+    _eTotal = sum;
     ui->eTotalLabel->setText (QString::number (sum));
 
-qDebug() << getRegulation ();
+qDebug() << _regulation;
     //set eTotalEnergy for ac
 //    double regulation = static_cast<double> (ui->regulationComboBox->currentIndex () + 1) / 100;
-    double totalEnergyReg = sum / getRegulation ();
-    ui->eTotalEnergyLabel->setText (QString::number (totalEnergyReg) + " WH/Day");
-    setETotalEnergy (totalEnergyReg);
-
-    emit isResolved (true);
+    _eTotalEnergy = sum / _regulation;
+    ui->eTotalEnergyLabel->setText (QString::number (_eTotalEnergy) + " WH/Day");
 }
 
-double FormLoadAnalysis::getETotalEnergy()
-{
-    return eTotalEnergy;
-}
 
-void FormLoadAnalysis::setETotalEnergy(double value)
-{
-    eTotalEnergy = value;
-}
 void FormLoadAnalysis::on_regulationComboBox_currentTextChanged(const QString &arg1)
 {
-    setRegulation (arg1.toDouble ());
+    _regulation = static_cast<double> (arg1.toDouble ()) / 100;
+    emit regulation(_regulation);
 }
-double FormLoadAnalysis::getRegulation()
-{
-    return regulation;
-}
-
-void FormLoadAnalysis::setRegulation(double value)
-{
-    regulation = static_cast<double> (value) / 100;
-}
-
