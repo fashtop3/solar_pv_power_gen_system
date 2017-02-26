@@ -31,11 +31,20 @@ public slots:
     void onTotalReqBatt(int batteries);
     void onTotalSeriesBatt(int batteries);
     void onTotalParallelBatt(int batteries);
+    void onETotalEnergy(double eTotal);
+    void onDaysOfAutonomy(QString days);
+    void onUnitBatteryCapacity(QString unit);
 //    void onRegulatorVoltage(int voltage);
 
     void onPowerOfASinglePV(double power);
+private slots:
+    void on_printPushButton_clicked();
+
 private:
     Ui::FormRecomendedPVSystem *ui;
+    double _eTotal;
+    QString _days_of_autonomy;
+    QString _unit_batt_voltage;
 
 };
 

@@ -97,10 +97,13 @@ void PreferenceDialog::connections()
 
     connect(formChargeControllerSizing, SIGNAL(chargeCtrlCurrRating(double)), formRecomendedPVSystem, SLOT(onChargeCtrlCurrRating(double)));
 
+    connect(formLoadAnalysis, SIGNAL(eTotalEnergy(double)), formRecomendedPVSystem, SLOT(onETotalEnergy(double)));
     connect(formSolarStorageSizing, SIGNAL(totalReqBatt(int)), formRecomendedPVSystem, SLOT(onTotalReqBatt(int)));
     connect(formSolarStorageSizing, SIGNAL(totalSeriesBatt(int)), formRecomendedPVSystem, SLOT(onTotalSeriesBatt(int)));
     connect(formSolarStorageSizing, SIGNAL(totalParallelBatt(int)), formRecomendedPVSystem, SLOT(onTotalParallelBatt(int)));
     connect(formSolarStorageSizing, SIGNAL(enablePrintButton(bool)), formRecomendedPVSystem, SLOT(enablePrint(bool)));
+    connect(formSolarStorageSizing, SIGNAL(daysOfAutonomy(QString)), formRecomendedPVSystem, SLOT(onDaysOfAutonomy(QString)));
+    connect(formSolarStorageSizing, SIGNAL(unitBatteryCapacity(QString)), formRecomendedPVSystem, SLOT(onUnitBatteryCapacity(QString)));
 
     connect(formInverterSizing, SIGNAL(inverterPowerRating(double)), formRecomendedPVSystem, SLOT(onInverterPowerRating(double)));
     connect(formPVArraySizing, SIGNAL(powerOfASinglePV(double)), formRecomendedPVSystem, SLOT(onPowerOfASinglePV(double)));

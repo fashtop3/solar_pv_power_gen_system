@@ -23,6 +23,8 @@ signals:
     void totalSeriesBatt(int tSeriesBatt);
     void totalParallelBatt(int tParallelBatt);
     void enablePrintButton(bool enable);
+    void daysOfAutonomy(QString days);
+    void unitBatteryCapacity(QString voltage);
 
 public slots:
     void onDcSystemVoltage(int value);
