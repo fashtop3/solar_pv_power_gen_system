@@ -24,7 +24,7 @@ signals:
     void totalParallelBatt(int tParallelBatt);
     void enablePrintButton(bool enable);
     void daysOfAutonomy(QString days);
-    void unitBatteryCapacity(QString voltage);
+    void capacityOfOneBatteryUnitCb(QString voltage);
 
 public slots:
     void onDcSystemVoltage(int value);

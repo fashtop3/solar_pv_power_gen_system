@@ -75,7 +75,7 @@ void FormSolarStorageSizing::on_calculatePushButton_clicked()
     emit totalSeriesBatt(_totalSeriesBatt);
     emit totalParallelBatt(_totalParallelBatt);
     emit daysOfAutonomy(ui->daysOfAutonnomyComboBox->currentText());
-    emit unitBatteryCapacity(ui->voltageOfAUnitBatteryVbattLineEdit->text());
+    emit capacityOfOneBatteryUnitCb(ui->chosenCapacityOfOneBatteryUnitCbLineEdit->text());
     emit enablePrintButton(true);
 }
 

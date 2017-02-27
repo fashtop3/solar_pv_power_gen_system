@@ -23,8 +23,7 @@ SOURCES += \
     loadanalysisdelegate.cpp \
     main.cpp \
     mainwindow.cpp \
-    preferencedialog.cpp \
-    pvsystem.cpp
+    preferencedialog.cpp
 
 HEADERS  += \
     formchargecontrollersizing.h \
@@ -36,8 +35,7 @@ HEADERS  += \
     formsolarstoragesizing.h \
     loadanalysisdelegate.h \
     mainwindow.h \
-    preferencedialog.h \
-    pvsystem.h
+    preferencedialog.h
 
 FORMS    += \
     formchargecontrollersizing.ui \

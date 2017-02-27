@@ -33,7 +33,7 @@ public slots:
     void onTotalParallelBatt(int batteries);
     void onETotalEnergy(double eTotal);
     void onDaysOfAutonomy(QString days);
-    void onUnitBatteryCapacity(QString unit);
+    void onCapacityOfOneBatteryUnitCb(QString unit);
 //    void onRegulatorVoltage(int voltage);
 
     void onPowerOfASinglePV(double power);
@@ -44,7 +44,7 @@ private:
     Ui::FormRecomendedPVSystem *ui;
     double _eTotal;
     QString _days_of_autonomy;
-    QString _unit_batt_voltage;
+    QString _battery_unit_cb;
 
 };
 

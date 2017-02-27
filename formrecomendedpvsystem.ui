@@ -171,7 +171,7 @@
           <item row="1" column="0">
            <widget class="QLabel" name="label_7">
             <property name="text">
-             <string>Number of parallel:</string>
+             <string>Modules in parallel:</string>
             </property>
            </widget>
           </item>
@@ -185,7 +185,7 @@
           <item row="2" column="0">
            <widget class="QLabel" name="label_10">
             <property name="text">
-             <string>Number of series:</string>
+             <string>Modules in series:</string>
             </property>
            </widget>
           </item>
@@ -268,7 +268,7 @@
           <item row="1" column="0">
            <widget class="QLabel" name="label_9">
             <property name="text">
-             <string>Number of series:</string>
+             <string>Batteries in series:</string>
             </property>
            </widget>
           </item>
@@ -282,7 +282,7 @@
           <item row="2" column="0">
            <widget class="QLabel" name="label_12">
             <property name="text">
-             <string>Number of parallel:</string>
+             <string>Batteries in parallel:</string>
             </property>
            </widget>
           </item>
